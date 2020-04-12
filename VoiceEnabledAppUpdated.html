@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <style>
+        body {
+            background-color: white;
+            text-align: center;
+            color: black;
+        }
+    </style>
+    <script src="compare-strings.js">
+    </script>
+    <script>
+        var str1 = 'Why is this trend important today ?';
+        var str2 = 'What does this mean for organizations ?';
+        var str3 = 'Where has this trend had an impact ?';
+        var str4 = 'How can organizations respond ?';
+        var recognition = new webkitSpeechRecognition();
+  	recognition.continuous = true;
+	recognition.onend = function() { 
+recognition.start();
+  console.log('Speech recognition service disconnected'); 
+}
+        recognition.onresult = function(event) {
+        	var output = document.getElementById("output");
+                output.innerHTML = "";
+                for (var i = 0; i < event.results.length; i++) {
+		    var len = event.results.length-1;
+                    output.innerHTML = output.innerHTML +event.results[i][0].transcript;
+                    var str = event.results[len][0].transcript;
+                    var matches = findBestMatch(str, [str1, str2, str3, str4]);
+                    var bestMatchStr = matches.bestMatch.target;
+                    var rating = matches.bestMatch.rating;
+                    if (rating > 0.4) 
+                        document.getElementById("output").innerHTML = bestMatchStr;
+		   else
+ 			document.getElementById("output").innerHTML = 'Not found !';
+            }
+	}
+	recognition.start();
+        
+    </script>
+</head>
+
+<body>
+    <h1>Voice Enabled App</h1>
+    <p id="output">No Results</p>
+</body>
+
+</html>
